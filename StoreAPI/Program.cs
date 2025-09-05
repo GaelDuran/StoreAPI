@@ -1,15 +1,16 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using StoreAPI;
+using Wkhtmltopdf.NetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("SqlServer");
 
 // Add services to the container.
 
-builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddWkhtmltopdf();
 builder.Services.AddDbContext<StoreDbContext>(o =>
     o.UseSqlServer(connectionString)
     );

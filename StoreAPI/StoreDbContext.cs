@@ -10,6 +10,7 @@ public class StoreDbContext : DbContext
     public DbSet<SystemUser> SystemUsers { get; set; }
     public DbSet<Store> Store { get; set; }
     public DbSet<OrderProduct> OrderProduct { get; set; }
+    public DbSet<Invoice> Invoice { get; set; }
 
     public StoreDbContext(DbContextOptions<StoreDbContext> options) : base(options)
     {
@@ -51,5 +52,14 @@ public class StoreDbContext : DbContext
             new Product { Id = 5, Name = "Café americano", Description = "Taza grande", Price = 45, StoreId = 3 },
             new Product { Id = 6, Name = "Refresco 600ml", Description = "Bebida refrescante", Price = 20, StoreId = 5 }
         );
+
+        modelBuilder.Entity<Invoice>()
+            .HasIndex(i => i.InvoiceNumber)
+            .IsUnique();
+        modelBuilder.Entity<Invoice>()
+            .HasOne(i => i.Order)
+            .WithMany()
+            .HasForeignKey(i => i.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

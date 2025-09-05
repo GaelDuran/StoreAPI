@@ -22,6 +22,84 @@ namespace StoreAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("StoreAPI.Models.Entities.Invoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BillingAddress")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("BillingEmail")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("BillingName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("IssueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("Subtotal")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Tax")
+                        .HasColumnType("float");
+
+                    b.Property<string>("TaxId")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<double>("Total")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceNumber")
+                        .IsUnique();
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("Invoice");
+                });
+
             modelBuilder.Entity("StoreAPI.Models.Entities.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -86,14 +164,61 @@ namespace StoreAPI.Migrations
                     b.Property<int>("StoreId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StoredId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("StoreId");
 
                     b.ToTable("Product");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Calzado típico de León",
+                            Name = "Zapatos de piel",
+                            Price = 1200.0,
+                            StoreId = 4
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Artesanía local",
+                            Name = "Bolsa de cuero",
+                            Price = 950.0,
+                            StoreId = 4
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Comida rápida",
+                            Name = "Hamburguesa doble",
+                            Price = 120.0,
+                            StoreId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Especialidad italiana",
+                            Name = "Pizza familiar",
+                            Price = 220.0,
+                            StoreId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Taza grande",
+                            Name = "Café americano",
+                            Price = 45.0,
+                            StoreId = 3
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Bebida refrescante",
+                            Name = "Refresco 600ml",
+                            Price = 20.0,
+                            StoreId = 5
+                        });
                 });
 
             modelBuilder.Entity("StoreAPI.Models.Entities.Store", b =>
@@ -117,6 +242,50 @@ namespace StoreAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Store");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Plaza Mayor León",
+                            Latitude = 21.154,
+                            Longitude = -101.69459999999999
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Centro Max",
+                            Latitude = 21.094799999999999,
+                            Longitude = -101.6417
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Plaza Galerías Las Torres",
+                            Latitude = 21.121099999999998,
+                            Longitude = -101.6613
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Outlet Mulza",
+                            Latitude = 21.0459,
+                            Longitude = -101.58620000000001
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "La Gran Plaza León",
+                            Latitude = 21.128,
+                            Longitude = -101.6827
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Altacia",
+                            Latitude = 21.128,
+                            Longitude = -102.0
+                        });
                 });
 
             modelBuilder.Entity("StoreAPI.Models.Entities.SystemUser", b =>
@@ -151,11 +320,22 @@ namespace StoreAPI.Migrations
                         new
                         {
                             Id = 1,
-                            Email = "juan.frausto@gmail.com",
+                            Email = "gael.duran@gmail.com",
                             FirstName = "Leonardo Gael",
                             LastName = "Duran Torres",
                             Password = "123456"
                         });
+                });
+
+            modelBuilder.Entity("StoreAPI.Models.Entities.Invoice", b =>
+                {
+                    b.HasOne("StoreAPI.Models.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("StoreAPI.Models.Entities.Order", b =>
