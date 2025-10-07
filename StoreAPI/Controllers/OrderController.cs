@@ -22,9 +22,25 @@ namespace StoreAPI.Controllers
         {
             var orders = await _context.Order
                 .Include(o => o.SystemUser)
+                .Select(o => new
+                {
+                    Id = o.Id,
+                    Total = o.Total,
+                    CreatedAt = o.CreatedAt,
+                    User = new UserDTO
+                    {
+                        Id = o.SystemUser.Id,
+                        Email = o.SystemUser.Email,
+                        FirstName = o.SystemUser.FirstName,
+                        LastName = o.SystemUser.LastName,
+                    }
+                })
                 .ToListAsync();
-            return Ok(orders); 
+    
+            // _context.Order.FirstOrDefaultAsync(o=>o.Id == id);
+            return Ok(orders);
         }
+
         
         [HttpPost]
         public async Task<ActionResult> CreateOrder(
