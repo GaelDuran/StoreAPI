@@ -8,6 +8,6 @@ public class Order
     public int SystemUserId { get; set; }
     public SystemUser SystemUser { get; set; }
     
-    // Navigation property
     public List<OrderProduct> OrderProducts { get; set; }
+    public Invoice Invoice { get; set; }
 }
