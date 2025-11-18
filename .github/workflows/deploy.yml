@@ -17,15 +17,15 @@ jobs:
         run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p "${{ secrets.DOCKER_PASSWORD }}"
 
       - name: Build Docker Image
-        run: docker build -t pabloalonso24/store-api:${{ github.sha }} .
+        run: docker build -t /store-api:${{ github.sha }} .
 
       - name: Tag Latest
-        run: docker tag pabloalonso24/store-api:${{ github.sha }} pabloalonso24/store-api:latest
+        run: docker mariguapo/store-api:${{ github.sha }} mariguapo/store-api:latest
 
       - name: Push Docker Image
         run: |
-          docker push pabloalonso24/store-api:${{ github.sha }}
-          docker push pabloalonso24/store-api:latest
+          docker push mariguapo/store-api:${{ github.sha }}
+          docker push mariguapo/store-api:latest
   
   deploy:
     needs: build-and-push
@@ -38,6 +38,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            docker pull pabloalonso24/store-api:latest
+            docker pull mariguapo/store-api:latest
             cd containers
             docker compose up -d

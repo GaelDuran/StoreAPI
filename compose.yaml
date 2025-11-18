@@ -11,7 +11,16 @@
     
     volumes:
       - sql_server_data:/var/opt/mssql
+  storeapi:
+    image: storeapi
+    build:
+      context: .
+      dockerfile: StoreAPI/Dockerfile
+
+  storeapi.models:
+    image: storeapi.models
+    build:
+      context: .
+      dockerfile: StoreAPI.Models/Dockerfile
 volumes:
   sql_server_data:
- 
- 
